@@ -97,15 +97,28 @@ prior muss geschätzt werden, $p(e|H)$ sollte aus H klar sein. $p(e)$ ist schwer
 \begin{enumerate}
 	\item
 \begin{align*}
-	P(down | F=Age_{25}) &= \frac1{1250}\\
-	P(down | F=Age_{43}) &= \frac1{50}\\
-	P(pos | \neg down) &= 0.01\\
-	P(\neg pos | down) &= 0.01
+	&P(down | F=Age_{25}) = \frac1{1250} = 0.0008\\
+	&P(\neg down | F=Age_{25}) = 0.9992\\
+	&P(down | F=Age_{43}) = \frac1{50} = 0.02\\
+	&P(\neg down | F=Age_{43}) = 0.98\\
+	&P(down) = P(down | F=Age_{43}) + P(down | F=Age_{25}) = 0.0208 \\
+	&P(pos | \neg down) = 0.01\\
+	&P(\neg pos | \neg down) = 0.99\\
+	&P(\neg pos | down) = 0.01\\
+	&P(pos | down) = 0.99\\
+	&P(pos)
 \end{align*}
+\begin{tabular}{lcc}
+	& down & $\neg$ down \\ \hline
+	pos & & \\ \hline
+	$\neg$ pos & & 
+\end{tabular}
 \item
 	\begin{align*}
 		P(down | F=Age_{25}, pos) &= P(down | pos) \\
-																											 &= \frac{P(pos|down)\cdot P(down)}{P(pos)}
+																											 &= \frac{P(pos|down)\cdot P(down)}{P(pos)}\\
+																											 &= \frac{P(pos, down)}{P(pos)}\\
+		P(pos|down) &= 0.99\\
 	\end{align*}
 
 \end{enumerate}
