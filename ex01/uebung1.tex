@@ -1,0 +1,158 @@
+\documentclass[fleqn,12pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+\usepackage[ngerman]{babel}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{gauss}
+\usepackage{braket}
+\usepackage{hyperref}
+\usepackage{wasysym}
+\usepackage{tikz}
+\usetikzlibrary{intersections}
+\usetikzlibrary{arrows}
+\tikzset{
+	treenode/.style = {align=center, inner sep=0pt, text centered,
+				font=\sffamily},
+					arn_n/.style = {treenode, circle, white, font=\sffamily\bfseries, draw=black,
+							fill=black, text width=1.5em},% arbre rouge noir, noeud noir
+								arn_r/.style = {treenode, circle, red, draw=red, 
+										text width=1.5em, very thick},% arbre rouge noir, noeud rouge
+											arn_x/.style = {treenode, rectangle, draw=black,
+													minimum width=0.5em, minimum height=0.5em}% arbre rouge noir, nil
+													}
+
+\usepackage{scrpage2}
+\pagestyle{scrheadings}
+\clearscrheadfoot
+\ohead{\pagemark}
+\ihead{Magnus Berendes, 21752155}
+\ifoot{\today}
+\ofoot{\blattn}
+%\setheadtopline{1pt}
+\setheadsepline{0.4pt}
+\setfootsepline{0.4pt}
+
+\usepackage{enumitem}
+\newcommand{\id}{\, \mathrm{d}}
+\newcommand{\intl}{\int\displaylimits}
+% New definition of square root:
+% it renames \sqrt as \oldsqrt
+\let\oldsqrt\sqrt
+% it defines the new \sqrt in terms of the old one
+\def\sqrt{\mathpalette\DHLhksqrt}
+\def\DHLhksqrt#1#2{%
+	\setbox0=\hbox{$#1\oldsqrt{#2\,}$}\dimen0=\ht0
+	\advance\dimen0-0.2\ht0
+	\setbox2=\hbox{\vrule height\ht0 depth -\dimen0}%
+{\box0\lower0.4pt\box2}}
+
+\newcommand{\karos}[2]{
+	\begin{tikzpicture}
+		\draw[step=0.5cm, color=gray] (0,0) grid (#1 cm , #2 cm);
+	\end{tikzpicture}
+}
+\newcommand{\abs}[1]{
+	\left \vert #1 \right \vert
+}
+\newcommand{\absbb}[1]{
+	\left \Vert #1 \right \Vert
+}
+
+\usepackage{microtype}
+%TODO
+\newcommand{\blattn}{Exercise 1}
+\begin{document}
+\section*{\blattn}
+\setcounter{section}{1}
+\begin{itemize}
+	\item
+2.3 zuerst machen könnte hilfreich sein
+\item
+$$
+p(a|b) = \frac{p(b|a)\cdot p(a)}{p(b)}
+$$
+
+\item
+$$p(H|e) = \frac{p(e|H \cdot p(H)}{p(e)}
+$$
+wie wahrscheinlich ist es, dass es stimmt, was ich glaube über die Welt zu wissen (Hypothese), gegeben meine Wahrnehmung (evidenz)
+
+\item
+$p(H)$ prior, $p(H|e)$ posterior $\Rightarrow$ $p(H)$ im nächsten Schritt
+
+\item
+prior muss geschätzt werden, $p(e|H)$ sollte aus H klar sein. $p(e)$ ist schwer zu bestimmen
+\item
+	$$p(e) = p(e|H) \cdot p(H) + p(e|\neg H) \cdot p(\neg H)$$
+	$$p(e|H) \cdot p(H) = p(e\wedge H)$$
+\item
+	$$P(down | F=age25, positiv) = P(down | positiv)$$ weil conditional independence
+\item
+	$$P(a\wedge b) = 1 - p(\neg a \vee \neg B) = 1 - (1 -  \dots ) )$$
+\end{itemize}
+
+\subsection{AFT Tests}
+\begin{enumerate}
+	\item
+\begin{align*}
+	P(down | F=Age_{25}) &= \frac1{1250}\\
+	P(down | F=Age_{43}) &= \frac1{50}\\
+	P(pos | \neg down) &= 0.01\\
+	P(\neg pos | down) &= 0.01
+\end{align*}
+\item
+	\begin{align*}
+		P(down | F=Age_{25}, pos) &= P(down | pos) \\
+																											 &= \frac{P(pos|down)\cdot P(down)}{P(pos)}
+	\end{align*}
+
+\end{enumerate}
+
+\subsection{Stochastic Wumpus}
+\begin{align*}
+	&P(W\not =F_1) = 0.9\\
+	&P(W = F_1 = 0.1\\
+	&P(W = F_2) = 0.6\\
+	&P(S_x | W = F_x) = 1\\
+	&P(S_x | W \not = F_x) = 0.2
+\end{align*}
+\begin{enumerate}
+	\item
+		\begin{align*}
+			P(W=F_1 | S_1) &= \frac{P(S_1 | W=F_1) \cdot P(W=F_1)}{P(S_1)}\\
+									 &= \frac{1\cdot 0.1}{P(S_1)}\\
+			P(S_1) &= P(S_1 | W=F_1) \cdot P(W=F_1) + P(S_1 | W \not = F_1) \cdot P(W \not = F_1)\\
+						 &= 1\cdot 0.1 + 0.2 \cdot 0.9 = 0.28\\
+			P(W= F_1| S_1) &= \frac{1\cdot 0.1}{0.28} = 0.36\\
+														&\Rightarrow P(W \not = f_1) = 0.64
+		\end{align*}
+		The probability for $W=F_2$ can't be more than 0.64 as the Wumpus can not be in more than one place. As the probability for $W=F_1$ increases, we can assume that the probability for $W=F_2$ decreases as $\sum_{w\in W} P(w) = 1$
+\end{enumerate}
+\subsection{Disjunctive Random Variables}
+\begin{align*}
+	P(A \vee B \vee C) &= P(A \vee (B\vee C))\\
+										 &=P(A) + P(B\vee C) - P(A \wedge (B\vee C))\\
+	&= P(A) + P(B) + P(C) - P(B\wedge C) - P(A \wedge (B\vee C))\\
+																	 &= P(A) + P(B) + P(C) - P(B\wedge C) - P((A \wedge B) \vee (A\wedge C))\\
+																	 &= P(A) + P(B) + P(C) - P(B\wedge C) - (P(A\wedge B) + P(A\wedge C) \\ &\quad - P((A\wedge B) \wedge (A\wedge B)))\\
+																	 &= P(A) + P(B) + P(C) - P(B\wedge C) - P(A\wedge B) - P(A\wedge C) + P(A\wedge B \wedge C)\\
+\end{align*}
+\subsection{Chained Production Elements}
+\begin{enumerate}
+	\item
+\begin{align*}
+	P(works) &= P(a\wedge b \vee c\wedge d \vee e\wedge f)\\
+							 &= P(a, b) + P(c, d) + P (e, f) \\ &\quad- P(a,b,c,d) - P(c,d,e,f) - P(a,b,e,f) + P(a,b,c,d,e,f)\\
+								 &=0.95\cdot 0.90 + 0.85 \cdot 0.80 + 0.75\cdot0.70 \\
+					 &\quad- 0.95\cdot0.90\cdot0.85\cdot0.80 - 0.85\cdot0.80\cdot0.75\cdot0.70\\
+								 &\quad- 0.95\cdot0.90\cdot0.75\cdot0.70 + 0.95\cdot0.90\cdot0.85\cdot0.80\cdot0.75\cdot0.70 \\
+					 &=0.978
+\end{align*}
+\item
+	\begin{align*}
+		P(works) &= P(a\wedge b\wedge c\wedge e \vee c\wedge d \wedge a \wedge f \vee e\wedge f\wedge d \wedge b)\\
+	\end{align*}
+\end{enumerate}
+\end{document}
