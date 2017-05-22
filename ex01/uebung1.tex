@@ -67,52 +67,63 @@
 \begin{document}
 \section*{\blattn}
 \setcounter{section}{1}
-\begin{itemize}
-	\item
-2.3 zuerst machen könnte hilfreich sein
-\item
-$$
-p(a|b) = \frac{p(b|a)\cdot p(a)}{p(b)}
-$$
+%\begin{itemize}
+	%\item
+%2.3 zuerst machen könnte hilfreich sein
+%\item
+%$$
+%p(a|b) = \frac{p(b|a)\cdot p(a)}{p(b)}
+%$$
 
-\item
-$$p(H|e) = \frac{p(e|H \cdot p(H)}{p(e)}
-$$
-wie wahrscheinlich ist es, dass es stimmt, was ich glaube über die Welt zu wissen (Hypothese), gegeben meine Wahrnehmung (evidenz)
+%\item
+%$$p(H|e) = \frac{p(e|H \cdot p(H)}{p(e)}
+%$$
+%wie wahrscheinlich ist es, dass es stimmt, was ich glaube über die Welt zu wissen (Hypothese), gegeben meine Wahrnehmung (evidenz)
 
-\item
-$p(H)$ prior, $p(H|e)$ posterior $\Rightarrow$ $p(H)$ im nächsten Schritt
+%\item
+%$p(H)$ prior, $p(H|e)$ posterior $\Rightarrow$ $p(H)$ im nächsten Schritt
 
-\item
-prior muss geschätzt werden, $p(e|H)$ sollte aus H klar sein. $p(e)$ ist schwer zu bestimmen
-\item
-	$$p(e) = p(e|H) \cdot p(H) + p(e|\neg H) \cdot p(\neg H)$$
-	$$p(e|H) \cdot p(H) = p(e\wedge H)$$
-\item
-	$$P(down | F=age25, positiv) = P(down | positiv)$$ weil conditional independence
-\item
-	$$P(a\wedge b) = 1 - p(\neg a \vee \neg B) = 1 - (1 -  \dots ) )$$
-\end{itemize}
+%\item
+%prior muss geschätzt werden, $p(e|H)$ sollte aus H klar sein. $p(e)$ ist schwer zu bestimmen
+%\item
+	%$$p(e) = p(e|H) \cdot p(H) + p(e|\neg H) \cdot p(\neg H)$$
+	%$$p(e|H) \cdot p(H) = p(e\wedge H)$$
+%\item
+	%$$P(down | F=age25, positiv) = P(down | positiv)$$ weil conditional independence
+%\item
+	%$$P(a\wedge b) = 1 - p(\neg a \vee \neg B) = 1 - (1 -  \dots ) )$$
+%\end{itemize}
 
 \subsection{AFT Tests}
 
 \begin{enumerate}
 	\item
 \begin{align*}
-	P(down | F=Age_{25}) &= \frac1{1250}\\
-	P(down | F=Age_{43}) &= \frac1{50}\\
-	P(pos | \neg down) &= 0.01\\
-	P(\neg pos | down) &= 0.01\\
-	P(pos | down) &= 0.99\\
-	P(pos, down) &= P(pos | down) \cdot P(down)\\
+	&P(down | F=Age_{25}) = \frac1{1250} = 0.0008\\
+	&P(\neg down | F=Age_{25}) = 0.9992\\
+	&P(down | F=Age_{43}) = \frac1{50} = 0.02\\
+	&P(\neg down | F=Age_{43}) = 0.98\\
+	&P(down) = P(down | F=Age_{43}) + P(down | F=Age_{25}) = 0.0208 \\
+	&P(pos | \neg down) = 0.01\\
+	&P(\neg pos | \neg down) = 0.99\\
+	&P(\neg pos | down) = 0.01\\
+	&P(pos | down) = 0.99\\
+	&P(pos)
 \end{align*}
+%\begin{tabular}{lcc}
+	%& down & $\neg$ down \\ \hline
+	%pos & & \\ \hline
+	%$\neg$ pos & & 
+%\end{tabular}
 \item
 	\begin{align*}
 		P(down | F=Age_{25}, pos) &= P(down | pos) \\
-																											 &= \frac{P(pos|down)\cdot P(down)}{P(pos)}\\
+																											 %&= \frac{P(pos|down)\cdot P(down)}{P(pos)}\\
 															%&= \frac{P(pos,down) \cdot P(down)}{P(pos) \cdot P(down)}\\
-				 &= \frac{P(pos|down)\cdot P(down)}{P(pos|down)\cdot P(down) + P(pos| \neg down) \cdot P(\neg down)}\\
+				 %&= \frac{P(pos|down)\cdot P(down)}{P(pos|down)\cdot P(down) + P(pos| \neg down) \cdot P(\neg down)}\\
 																&= \frac{P(pos|down)\cdot P(down)}{P(pos|down)\cdot P(down) + P(pos| \neg down) P(\neg down)}\\
+																											 &= \frac{P(pos, down)}{P(pos)}\\
+		P(pos|down) &= 0.99\\
 	\end{align*}
 
 \end{enumerate}
