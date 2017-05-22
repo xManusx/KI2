@@ -1,7 +1,8 @@
 \documentclass[fleqn,12pt]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage{color}
-\usepackage[ngerman]{babel}
+%\usepackage[]{babel}
+\usepackage{csquotes}
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{amsmath}
@@ -94,18 +95,24 @@ prior muss geschätzt werden, $p(e|H)$ sollte aus H klar sein. $p(e)$ ist schwer
 \end{itemize}
 
 \subsection{AFT Tests}
+
 \begin{enumerate}
 	\item
 \begin{align*}
 	P(down | F=Age_{25}) &= \frac1{1250}\\
 	P(down | F=Age_{43}) &= \frac1{50}\\
 	P(pos | \neg down) &= 0.01\\
-	P(\neg pos | down) &= 0.01
+	P(\neg pos | down) &= 0.01\\
+	P(pos | down) &= 0.99\\
+	P(pos, down) &= P(pos | down) \cdot P(down)\\
 \end{align*}
 \item
 	\begin{align*}
 		P(down | F=Age_{25}, pos) &= P(down | pos) \\
-																											 &= \frac{P(pos|down)\cdot P(down)}{P(pos)}
+																											 &= \frac{P(pos|down)\cdot P(down)}{P(pos)}\\
+															%&= \frac{P(pos,down) \cdot P(down)}{P(pos) \cdot P(down)}\\
+				 &= \frac{P(pos|down)\cdot P(down)}{P(pos|down)\cdot P(down) + P(pos| \neg down) \cdot P(\neg down)}\\
+																&= \frac{P(pos|down)\cdot P(down)}{P(pos|down)\cdot P(down) + P(pos| \neg down) P(\neg down)}\\
 	\end{align*}
 
 \end{enumerate}
@@ -129,6 +136,8 @@ prior muss geschätzt werden, $p(e|H)$ sollte aus H klar sein. $p(e)$ ist schwer
 														&\Rightarrow P(W \not = f_1) = 0.64
 		\end{align*}
 		The probability for $W=F_2$ can't be more than 0.64 as the Wumpus can not be in more than one place. As the probability for $W=F_1$ increases, we can assume that the probability for $W=F_2$ decreases as $\sum_{w\in W} P(w) = 1$
+	\item
+		$P(W= F_2)$ increases, $P(W= F_1)$ decreases again
 \end{enumerate}
 \subsection{Disjunctive Random Variables}
 \begin{align*}
@@ -151,8 +160,26 @@ prior muss geschätzt werden, $p(e|H)$ sollte aus H klar sein. $p(e)$ ist schwer
 					 &=0.978
 \end{align*}
 \item
+	%\begin{align*}
+		%&a \quad&\quad b \quad&\quad c \quad&\quad d \quad&\quad e \quad&\quad f&\\
+		%\quad&\quad.95 \quad&\quad .90 \quad&\quad .85 \quad&\quad .80 \quad&\quad .75 \quad&\quad .70\quad&\quad
+	%\end{align*}
+	\begin{align*}
+		a\wedge b \wedge c \wedge e &:= x\\
+		P(x) &= 0.95*0.90*0.85*0.75 = 0.545\\
+		c \wedge d \wedge a \wedge f &:= y\\
+		P(y) &= 0.85 * 0.8 * 0.95 * 0.70 = 0.452\\
+		e \wedge f \wedge d \wedge b &= z\\
+		P(z) &= 0.75 * 0.70 * 0.80 * 0.90 = 0.378\\
+	\end{align*}
 	\begin{align*}
 		P(works) &= P(a\wedge b\wedge c\wedge e \vee c\wedge d \wedge a \wedge f \vee e\wedge f\wedge d \wedge b)\\
+										&= P(x \vee y \vee z)\\
+						 &= P(x) + P(y) + P(z) - P(y \wedge z) - P(x \wedge y) - P(x \wedge z) + P(x \wedge y \wedge z)\\
+						 &= 1.375 - 0.171 - 0.246 - 0.206 + 0.093\\
+						 &= 0.845
 	\end{align*}
+
+	This works because the events are still independent of each other. Each \enquote{production lane} now just needs more elements to work.
 \end{enumerate}
 \end{document}
