@@ -1,0 +1,173 @@
+\documentclass[fleqn,12pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+\usepackage[ngerman]{babel}
+\usepackage{csquotes}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{gauss}
+\usepackage{braket}
+\usepackage{hyperref}
+\usepackage{wasysym}
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,arrows}
+%\usetikzlibrary{intersections}
+%\usetikzlibrary{arrows}
+%\tikzset{
+	%treenode/.style = {align=center, inner sep=0pt, text centered,
+				%font=\sffamily},
+					%arn_n/.style = {treenode, circle, white, font=\sffamily\bfseries, draw=black,
+							%fill=black, text width=1.5em},% arbre rouge noir, noeud noir
+								%arn_r/.style = {treenode, circle, red, draw=red, 
+										%text width=1.5em, very thick},% arbre rouge noir, noeud rouge
+											%arn_x/.style = {treenode, rectangle, draw=black,
+													%minimum width=0.5em, minimum height=0.5em}% arbre rouge noir, nil
+													%}
+
+\usepackage{graphicx}
+\usepackage{scrpage2}
+\pagestyle{scrheadings}
+\clearscrheadfoot
+\ohead{\pagemark}
+\ihead{Magnus Berendes, 21752155}
+\ifoot{\today}
+\ofoot{\blattn}
+%\setheadtopline{1pt}
+\setheadsepline{0.4pt}
+\setfootsepline{0.4pt}
+
+\usepackage{enumitem}
+\newcommand{\id}{\, \mathrm{d}}
+\newcommand{\intl}{\int\displaylimits}
+% New definition of square root:
+% it renames \sqrt as \oldsqrt
+\let\oldsqrt\sqrt
+% it defines the new \sqrt in terms of the old one
+\def\sqrt{\mathpalette\DHLhksqrt}
+\def\DHLhksqrt#1#2{%
+	\setbox0=\hbox{$#1\oldsqrt{#2\,}$}\dimen0=\ht0
+	\advance\dimen0-0.2\ht0
+	\setbox2=\hbox{\vrule height\ht0 depth -\dimen0}%
+{\box0\lower0.4pt\box2}}
+
+\newcommand{\karos}[2]{
+	\begin{tikzpicture}
+		\draw[step=0.5cm, color=gray] (0,0) grid (#1 cm , #2 cm);
+	\end{tikzpicture}
+}
+\newcommand{\abs}[1]{
+	\left \vert #1 \right \vert
+}
+\newcommand{\absbb}[1]{
+	\left \Vert #1 \right \Vert
+}
+
+\usepackage{microtype}
+%TODO
+\newcommand{\blattn}{Exercise 2}
+\begin{document}
+\section*{\blattn}
+\setcounter{section}{2}
+
+\subsection{Nuclear Test}
+		\begin{align*}
+			X = \Set{N, E, S_1, S_2}\\
+		\end{align*}
+\begin{figure}[h]
+	\centering
+  \includegraphics[width=\textwidth]{a.png}
+	\caption{Network (a)}
+	\label{fig1}
+\end{figure}
+
+\begin{itemize}
+	\item
+		No parents for $N$ obviously
+	\item
+		If we assume that a nuclear test does not cause a real, \enquote{organic} earthquake, then there's no relationship between the two, thus $E$ also has no parents
+	\item
+		$S_1$ and $S_2$ obviously depend on $N$ and $E$, both can cause the seismometers to go off
+\end{itemize}
+\begin{figure}[h]
+	\centering
+  \includegraphics[width=\textwidth]{b.png}
+	\caption{Network (b)}
+	\label{fig2}
+\end{figure}
+\begin{itemize}
+	\item
+		No parents for $S_1$ obviously
+	\item
+		Also no parents for $S_2$ as we don't want both symptoms to be dependent of each other
+	\item
+		$E$ and $N$ are probable causes for $S_1$ and $S_2$
+\end{itemize}
+
+\subsection{Medical Bayesian Network}
+
+
+ \begin{tikzpicture}[
+   node distance=1cm and 1cm,
+   mynode/.style={draw,circle,text width=1cm,align=center}
+ ]
+ \node[mynode] (smoke) {Smoke};
+ \node[mynode,right=of smoke] (asia) {Asia};
+ \node[mynode,below=of smoke] (tbc) {TBC};
+ \node[mynode,left =of tbc] (lc) {LC};
+ \node[mynode,below =of asia] (bron) {bron};
+ \node[mynode,below =of tbc] (xray) {Xray};
+ \node[mynode,below =of lc] (dysp) {Dysp};
+
+ \path (smoke) edge[-latex] (lc)
+ (asia) edge[-latex] (tbc)
+ (smoke) edge[-latex] (bron)
+ (lc) edge[-latex] (xray)
+ (tbc) edge[-latex] (dysp)
+ (bron) edge[-latex] (dysp)
+ (lc) edge[-latex] (dysp)
+ (tbc) edge[-latex] (xray);
+ \end{tikzpicture}
+
+
+ \subsection{Medical Bayesian Network 2}
+ \begin{enumerate}
+	 \item$\quad$
+
+		 \begin{tikzpicture}[
+			 node distance=1cm and 1cm,
+			 mynode/.style={draw,circle,text width=1cm,align=center}
+			 ]
+			 \node[mynode] (hbt) {HBT};
+			 \node[mynode, above left=of hbt] (mal) {Mal};
+			 \node[mynode, above right=of hbt] (men) {Men};
+			 \node[mynode, below=of hbt] (f){F};
+
+
+			 \path (mal) edge[-latex] (hbt)
+				 (men) edge[-latex] (hbt)
+				 (hbt) edge[-latex] (f);
+		 \end{tikzpicture}
+ And associated CPTs
+ \item
+	 \begin{align*}
+		 P(mal, \neg men | f) &= \frac{P(mal, \neg men, f)}{P(f)}\\
+													&= \frac{\sum_{HBT, F} P(mal, \neg men, f, hbt)}{\sum_{Mal, Men, HBT} P(hbt, f, mal, men)}\\
+							 &= \frac{\sum_{HBT, F} P(mal) \cdot P(\neg men) \cdot P(hbt | mal, \neg men) \cdot P(f | hbt)}{\sum_{Mal, Men, HBT} P(mal) \cdot P(men) \cdot P(f | hbt) \cdot P(hbt | mal, men)}\\
+							 &= \frac{0.04 \cdot\sum_{HBT, F}  P(hbt | mal, \neg men) \cdot P(f | hbt)}{\sum_{Mal, Men, HBT} P(mal) \cdot P(men) \cdot P(f | hbt) \cdot P(hbt | mal, men)}\\
+					&= \frac{0.04 \cdot (0.1 \cdot 0.998 + 0.002 \cdot 0.1 + 0.9 \cdot 0.05 + 0.9 \cdot 0.95)}{666}\\
+				 &= \frac{0.04}{0.170429} \approx 23.5\%
+	 \end{align*}
+ \end{enumerate}
+%$
+%hbt f
+ %0 0 0.1 \cdot 0.998
+ %0 1 0.002 \cdot 0.1
+ %1 0 0.9 \cdot 0.05
+ %1 1 0.9 \cdot 0.95
+ %$
+
+
+
+ \end{document}
