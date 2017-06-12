@@ -7,7 +7,7 @@ public class Query
 {
 	public static void main(String args[]){
 		boolean test = true;
-		System.out.println("Test" + test);
+		//System.out.println("Test" + test);
 		Network network = new Network();
 		Node a = new Node("Node a", new ArrayList<Node>());
 		a.setProb(new ArrayList<Boolean>(), 0.001);
@@ -57,9 +57,9 @@ public class Query
 			add(new Pair<Node,Boolean>(d, new Boolean(true)));
 		}};
 
-		System.out.println(query(network, a, evidence));
-		System.out.println("should be 0.284");
-		System.out.println("Yup");
+		//System.out.println(query(network, a, evidence));
+		//System.out.println("should be 0.284");
+		//System.out.println("Yup");
 	}
 
 	public static Double query(Network network, Node node, ArrayList<Pair<Node,Boolean>> evidence){
@@ -73,7 +73,7 @@ public class Query
 		ArrayList<Pair<Node,Boolean>> evidence_f = new ArrayList<Pair<Node,Boolean>>(evidence);
 		evidence_f.add(new Pair<Node,Boolean>(node, new Boolean(false)));
 		q[1] = enum_all(new ArrayList<Node>(sorted), evidence_f);
-		System.out.println("Q: " + q[0] + " " + q[1]);
+		//System.out.println("Q: " + q[0] + " " + q[1]);
 		return normalize2(q);
 	}
 
