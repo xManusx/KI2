@@ -10,11 +10,11 @@ public class Query
 		System.out.println("Test" + test);
 		Network network = new Network();
 		Node a = new Node("Node a", new ArrayList<Node>());
-		a.setProb(new ArrayList<Boolean>(), 0.9);
+		a.setProb(new ArrayList<Boolean>(), 0.001);
 		network.addNode(a);
 
 		Node b= new Node("Node b", new ArrayList<Node>());
-		b.setProb(new ArrayList<Boolean>(), 0.12);
+		b.setProb(new ArrayList<Boolean>(), 0.002);
 		network.addNode(b);
 
 		ArrayList<Node> c_par = new ArrayList<Node>() {{
@@ -54,26 +54,26 @@ public class Query
 
 		ArrayList<Pair<Node,Boolean>> evidence = new ArrayList<Pair<Node, Boolean>>() {{
 			add(new Pair<Node,Boolean>(e, new Boolean(true)));
-			add(new Pair<Node,Boolean>(d, new Boolean(false)));
+			add(new Pair<Node,Boolean>(d, new Boolean(true)));
 		}};
 
-		query(network, a, evidence);
+		System.out.println(query(network, a, evidence));
+		System.out.println("should be 0.284");
 		System.out.println("Yup");
 	}
 
 	public static Double query(Network network, Node node, ArrayList<Pair<Node,Boolean>> evidence){
 		double[] q = new double[2];
-
-		//Make sure nodes passed to enum_all are in topological order. TODO...
+		ArrayList<Node> sorted = topoSort(network);
 
 		ArrayList<Pair<Node,Boolean>> evidence_t = new ArrayList<Pair<Node,Boolean>>(evidence);
 		evidence_t.add(new Pair<Node,Boolean>(node, new Boolean(true)));
-		q[0] = enum_all(network.getNodes(), evidence_t);
+		q[0] = enum_all(new ArrayList<Node>(sorted), evidence_t);
 
 		ArrayList<Pair<Node,Boolean>> evidence_f = new ArrayList<Pair<Node,Boolean>>(evidence);
 		evidence_f.add(new Pair<Node,Boolean>(node, new Boolean(false)));
-		q[1] = enum_all(network.getNodes(), evidence_f);
-
+		q[1] = enum_all(new ArrayList<Node>(sorted), evidence_f);
+		System.out.println("Q: " + q[0] + " " + q[1]);
 		return normalize2(q);
 	}
 
@@ -82,8 +82,6 @@ public class Query
 			return 1;
 		}
 		Node y = nodes.remove(0);
-		boolean inEvidence = false;
-		boolean valueInEvidence;
 
 		//Get evidences for y's parents
 		ArrayList<Node> parents = y.parents;
@@ -103,10 +101,14 @@ public class Query
 				return one*two;
 			}
 		}
+
 		ArrayList<Pair<Node,Boolean>> evidence_f = new ArrayList<Pair<Node,Boolean>>(evidence);
 		evidence_f.add(new Pair<Node, Boolean>(y, false));
-		evidence.add(new Pair<Node, Boolean>(y, true));
-		double one = calculateProb(y, true, ev) * enum_all(nodes, evidence);
+
+		ArrayList<Pair<Node,Boolean>> evidence_t = new ArrayList<Pair<Node,Boolean>>(evidence);
+		evidence_t.add(new Pair<Node, Boolean>(y, true));
+
+		double one = calculateProb(y, true, ev) * enum_all(nodes, evidence_t);
 		double two = calculateProb(y, false, ev) * enum_all(nodes, evidence_f);
 
 		return one+two;
@@ -118,5 +120,31 @@ public class Query
 	private static double normalize2(double[] in){
 		assert(in.length == 2);
 		return in[0] / (in[0] + in[1]);
+	}
+
+	private static ArrayList<Node> topoSort(Network network){
+		ArrayList<Node> ret = new ArrayList<Node>();
+		ArrayList<Node> toAdd = new ArrayList<Node>();
+outerloop:
+		for(Node i : network.getNodes()){
+			for(Node parent : i.parents){
+				if(!ret.contains(parent)){
+					if(!toAdd.contains(i))
+						toAdd.add(i);
+					continue outerloop;
+				}
+			}
+			ret.add(i);
+		}
+		while(!toAdd.isEmpty()){
+			Node n = toAdd.remove(0);
+			for(Node i : n.parents){
+				if(!ret.contains(i)){
+					toAdd.add(n);
+					break;
+				}
+			}
+		}
+		return ret;
 	}
 }
