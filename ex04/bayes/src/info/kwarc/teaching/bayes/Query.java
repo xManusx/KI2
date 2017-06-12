@@ -64,6 +64,8 @@ public class Query
 	public static Double query(Network network, Node node, ArrayList<Pair<Node,Boolean>> evidence){
 		double[] q = new double[2];
 
+		//Make sure nodes passed to enum_all are in topological order. TODO...
+
 		ArrayList<Pair<Node,Boolean>> evidence_t = new ArrayList<Pair<Node,Boolean>>(evidence);
 		evidence_t.add(new Pair<Node,Boolean>(node, new Boolean(true)));
 		q[0] = enum_all(network.getNodes(), evidence_t);
@@ -72,7 +74,7 @@ public class Query
 		evidence_f.add(new Pair<Node,Boolean>(node, new Boolean(false)));
 		q[1] = enum_all(network.getNodes(), evidence_f);
 
-		return q[0];
+		return normalize2(q);
 	}
 
 	private static double enum_all(ArrayList<Node> nodes, ArrayList<Pair<Node,Boolean>> evidence){
@@ -85,11 +87,11 @@ public class Query
 
 		//Get evidences for y's parents
 		ArrayList<Node> parents = y.parents;
-		ArrayList<Pair<Node, Boolean>> ev = new ArrayList<Pair<Node,Boolean>>();
+		ArrayList<Boolean> ev = new ArrayList<Boolean>();
 		for(Node i : parents){
 			for(Pair<Node,Boolean> j : evidence){
 				if(i.equals(j.getLeft()))
-					ev.add(j);
+					ev.add(j.getRight());
 			}
 		}
 
@@ -110,10 +112,11 @@ public class Query
 		return one+two;
 	}
 
-	private static double calculateProb(Node node, boolean assignment, ArrayList<Pair<Node,Boolean>> ev){
-		/*
-		 * ev is subset of nodes parents
-		 */
-		return 0;
+	private static double calculateProb(Node node, boolean assignment, ArrayList<Boolean> ev){
+		return (assignment) ? node.getProb(ev) : 1 - node.getProb(ev);
+	}
+	private static double normalize2(double[] in){
+		assert(in.length == 2);
+		return in[0] / (in[0] + in[1]);
 	}
 }
