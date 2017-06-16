@@ -1,0 +1,146 @@
+\documentclass[fleqn,12pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+\usepackage[ngerman]{babel}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{gauss}
+\usepackage{braket}
+\usepackage{hyperref}
+\usepackage{wasysym}
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,arrows}
+%\usetikzlibrary{intersections}
+%\usetikzlibrary{arrows}
+%\tikzset{
+	%treenode/.style = {align=center, inner sep=0pt, text centered,
+				%font=\sffamily},
+					%arn_n/.style = {treenode, circle, white, font=\sffamily\bfseries, draw=black,
+							%fill=black, text width=1.5em},% arbre rouge noir, noeud noir
+								%arn_r/.style = {treenode, circle, red, draw=red, 
+										%text width=1.5em, very thick},% arbre rouge noir, noeud rouge
+											%arn_x/.style = {treenode, rectangle, draw=black,
+													%minimum width=0.5em, minimum height=0.5em}% arbre rouge noir, nil
+													%}
+
+\usepackage{scrpage2}
+\pagestyle{scrheadings}
+\clearscrheadfoot
+\ohead{\pagemark}
+\ihead{Magnus Berendes, 21752155}
+\ifoot{\today}
+\ofoot{\blattn}
+%\setheadtopline{1pt}
+\setheadsepline{0.4pt}
+\setfootsepline{0.4pt}
+
+\usepackage{enumitem}
+\newcommand{\id}{\, \mathrm{d}}
+\newcommand{\intl}{\int\displaylimits}
+% New definition of square root:
+% it renames \sqrt as \oldsqrt
+\let\oldsqrt\sqrt
+% it defines the new \sqrt in terms of the old one
+\def\sqrt{\mathpalette\DHLhksqrt}
+\def\DHLhksqrt#1#2{%
+	\setbox0=\hbox{$#1\oldsqrt{#2\,}$}\dimen0=\ht0
+	\advance\dimen0-0.2\ht0
+	\setbox2=\hbox{\vrule height\ht0 depth -\dimen0}%
+{\box0\lower0.4pt\box2}}
+
+\newcommand{\karos}[2]{
+	\begin{tikzpicture}
+		\draw[step=0.5cm, color=gray] (0,0) grid (#1 cm , #2 cm);
+	\end{tikzpicture}
+}
+\newcommand{\abs}[1]{
+	\left \vert #1 \right \vert
+}
+\newcommand{\absbb}[1]{
+	\left \Vert #1 \right \Vert
+}
+
+\usepackage{microtype}
+%TODO
+\newcommand{\blattn}{Exercise 5}
+\begin{document}
+\section*{\blattn}
+\setcounter{section}{5}
+
+\subsection{Decision Networks}
+\begin{enumerate}
+	\item
+ \begin{tikzpicture}[
+   %node distance=1cm and 1cm,
+   mynode/.style={draw,circle,text width=5em,align=center},
+   mysquare/.style={draw,rectangle,text width=5em,minimum height=5em,text centered},
+   mydi/.style={draw,diamond,text width=5em,align=center},
+	 node distance=2cm and 3cm,
+ ]
+	 \node[mysquare] (b){B};
+	 \node[mynode, right=of b](m){M};
+	 %above right=0.7cm and 4cm of A]
+	 %\node[mysquare, above right=2cm and 0.8cm of b](buy){Buy};
+	 \node[mynode, below=of b](p){P};
+	 \node[mydi, below left = 0.6cm and 3cm of b](u){U};
+
+	 \path %(buy) edge[-latex, bend right] (b)
+	 %(buy) edge[-latex, bend left] (m)
+	 (b) edge[-latex, bend right] (u)
+	 (b) edge[-latex] (p)
+	 (b) edge[-latex] (m)
+	 (m) edge[-latex, bend left] (p)
+	 (p) edge[-latex,bend left] (u);
+ \end{tikzpicture}
+		\item
+			\begin{align*}
+				B &= \top\\
+				P(m) &= 0.9\\
+				P(\neg m) &= 0.1\\
+				P(p) &= P(p|b,m) \cdot P(b,m) + P(p|b,\neg m)\cdot P(b,\neg m) \\
+				%&\quad+ P(p|\neg b,M) \cdot P(\neg b, M) + P(p|\neg b,\neg m) \cdot P(\neg b, \neg m)\\
+				&= 0.9 \cdot 0.9 + 0.5 \cdot 0.1 + 0 + 0\\
+				&= 0.86\\
+				P(\neg p) &= 0.14\\
+				EU(b) &= 0.86 \cdot 2000 - 100 = 1620 %+ (0.14 * 2000) - 100 \\
+			\end{align*}
+
+			\begin{align*}
+				B &= \bot\\
+				P(m) &= 0.7\\
+				P(\neg m) &= 0.3\\
+				P(p) &= P(p|\neg b,m) \cdot P(\neg b,m) + P(p|\neg b,\neg m)\cdot P(\neg b,\neg m) \\
+				&= 0.8 \cdot 0.7 + 0.3\cdot 0.3 = 0.65\\
+				P(\neg p) &= 0.35\\
+				EU(\neg b) &= 0.65 \cdot 2000 - 100 = 1200
+			\end{align*}
+\end{enumerate}
+
+\subsection{Allais Paradox}
+\begin{align*}
+	A &= [0.8, 4000; 0.2, 0]\\
+	E(A) &= 3200\\
+	B &= [1, 3000; 0, 0]\\
+	E(B) &= 3000\\
+	C &= [0.2, 4000; 0.8, 0]\\
+	E(C) &= 800\\
+	D &= [0.25, 3000; 0.75, 0]\\
+	E(D) &= 750\\
+\end{align*}
+\begin{itemize}
+	\item
+From $B \prec A$ we conclude: $U(3000) > 0.8U(4000) + 0.2U(0)$
+\item
+	From $C \prec D$ we conclude $0.2U(4000) + 0.8U(0)> 0.25U(3000) + 0.75U(0)$
+\item
+	\begin{align*}
+		A \prec B &\Rightarrow [p, A; (1-p) C] \prec [p, B; (1-p) C]\\
+		&\Rightarrow U(p\cdot E(A)) + U((1-p)\cdot E(C)) > U(p\cdot E(B)) + U((1-p) \cdot E(C))\\
+		&\Rightarrow U(p\cdot3200) + U((1-P) \cdot 800) > U(p\cdot 3000) + U((1-p) \cdot 800)\\
+		&\Rightarrow U(p\cdot3200) > U(p\cdot 3000)\\
+	\end{align*}
+\end{itemize}
+
+\end{document}
