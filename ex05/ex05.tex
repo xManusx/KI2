@@ -71,7 +71,8 @@
 
 \subsection{Decision Networks}
 \begin{enumerate}
-	\item
+	\item$\quad$\\
+
  \begin{tikzpicture}[
    %node distance=1cm and 1cm,
    mynode/.style={draw,circle,text width=5em,align=center},
@@ -94,6 +95,8 @@
 	 (m) edge[-latex, bend left] (p)
 	 (p) edge[-latex,bend left] (u);
  \end{tikzpicture}
+
+ With associated CPTs as given in the assignment.
 		\item
 			\begin{align*}
 				B &= \top\\
@@ -121,26 +124,43 @@
 \subsection{Allais Paradox}
 \begin{align*}
 	A &= [0.8, 4000; 0.2, 0]\\
-	E(A) &= 3200\\
+	EU(A) &= 3200\\
 	B &= [1, 3000; 0, 0]\\
-	E(B) &= 3000\\
+	EU(B) &= 3000\\
 	C &= [0.2, 4000; 0.8, 0]\\
-	E(C) &= 800\\
+	EU(C) &= 800\\
 	D &= [0.25, 3000; 0.75, 0]\\
-	E(D) &= 750\\
+	EU(D) &= 750\\
 \end{align*}
-\begin{itemize}
-	\item
-From $B \prec A$ we conclude: $U(3000) > 0.8U(4000) + 0.2U(0)$
+\begin{enumerate}
+	%\item
+%From $B \prec A$ we conclude: $U(3000) > 0.8U(4000) + 0.2U(0)$
+%\item
+	%From $C \prec D$ we conclude $0.2U(4000) + 0.8U(0)> 0.25U(3000) + 0.75U(0)$
+\item From the definition:
+
+	$B \prec A \Rightarrow [p, B;(1-p),D] \prec [p, A; (1-p), D]$
 \item
-	From $C \prec D$ we conclude $0.2U(4000) + 0.8U(0)> 0.25U(3000) + 0.75U(0)$
-\item
+	As this should be valid for any $p$, set $p$ to 0.5:
 	\begin{align*}
-		A \prec B &\Rightarrow [p, A; (1-p) C] \prec [p, B; (1-p) C]\\
-		&\Rightarrow U(p\cdot E(A)) + U((1-p)\cdot E(C)) > U(p\cdot E(B)) + U((1-p) \cdot E(C))\\
-		&\Rightarrow U(p\cdot3200) + U((1-P) \cdot 800) > U(p\cdot 3000) + U((1-p) \cdot 800)\\
-		&\Rightarrow U(p\cdot3200) > U(p\cdot 3000)\\
+		U([p,B;(1-p),D]) &= p\cdot 3000 + (1-p)750 = 1500 + 375 = 1875\\
+		U([p,A;(1-p),D]) &= p\cdot 3200 + (1-p)750 = 1600 + 375 = 1975\\
 	\end{align*}
-\end{itemize}
+
+\item
+	The following should be valid from the definition of $\prec$
+
+	$[p,B;(1-p),D]) \prec [p,A;(1-p),D] \Leftrightarrow U([p,B;(1-p),D]) > U([p,A;(1-p),D])$
+
+\item
+	But, as shown in 2: $U([p,B;(1-p),D]) < U([p,A;(1-p),D])$ which contradicts 3.
+
+	%\begin{align*}
+		%A \prec B &\Rightarrow [p, A; (1-p) C] \prec [p, B; (1-p) C]\\
+		%&\Rightarrow U(p\cdot E(A)) + U((1-p)\cdot E(C)) > U(p\cdot E(B)) + U((1-p) \cdot E(C))\\
+		%&\Rightarrow U(p\cdot3200) + U((1-P) \cdot 800) > U(p\cdot 3000) + U((1-p) \cdot 800)\\
+		%&\Rightarrow U(p\cdot3200) > U(p\cdot 3000)\\
+	%\end{align*}
+\end{enumerate}
 
 \end{document}
