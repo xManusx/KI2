@@ -1,0 +1,239 @@
+\documentclass[fleqn,12pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+\usepackage[ngerman]{babel}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{gauss}
+\usepackage{braket}
+\usepackage{hyperref}
+\usepackage{wasysym}
+\usepackage{listings}
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,arrows}
+
+\usepackage{scrpage2}
+\pagestyle{scrheadings}
+\clearscrheadfoot
+\ohead{\pagemark}
+\ihead{Magnus Berendes, 21752155}
+\ifoot{\today}
+\ofoot{\blattn}
+%\setheadtopline{1pt}
+\setheadsepline{0.4pt}
+\setfootsepline{0.4pt}
+
+\usepackage{enumitem}
+\newcommand{\id}{\, \mathrm{d}}
+\newcommand{\intl}{\int\displaylimits}
+% New definition of square root:
+% it renames \sqrt as \oldsqrt
+\let\oldsqrt\sqrt
+% it defines the new \sqrt in terms of the old one
+\def\sqrt{\mathpalette\DHLhksqrt}
+\def\DHLhksqrt#1#2{%
+	\setbox0=\hbox{$#1\oldsqrt{#2\,}$}\dimen0=\ht0
+	\advance\dimen0-0.2\ht0
+	\setbox2=\hbox{\vrule height\ht0 depth -\dimen0}%
+{\box0\lower0.4pt\box2}}
+
+\newcommand{\karos}[2]{
+	\begin{tikzpicture}
+		\draw[step=0.5cm, color=gray] (0,0) grid (#1 cm , #2 cm);
+	\end{tikzpicture}
+}
+\newcommand{\abs}[1]{
+	\left \vert #1 \right \vert
+}
+\newcommand{\absbb}[1]{
+	\left \Vert #1 \right \Vert
+}
+
+\usepackage{microtype}
+%TODO
+\newcommand{\blattn}{Exercise 6}
+\begin{document}
+\section*{\blattn}
+\setcounter{section}{6}
+\subsection{Markov Mood Detection}
+\begin{enumerate}
+	\item
+\begin{align*}
+	P(DM_{1:3}| H_0) &= \sum_{x_1 \in \{H,B\}} \sum_{x_1 \in \{H,B\}}\sum_{x_2 \in \{H,B\}} &P(DM_1 | x_1) \cdot P(DM_2 | x_2) \cdot P(DM_3 | x_3)\\
+	&\quad &\cdot P(x_1 | H_0) \cdot P(x_2 | x_1)
+	%&=P(DM_d|B_d)^3 + {3 \choose 1} (P(DM_d | H_d) \cdot P(DM_d | B_d)^2) \\
+	%&\quad + {3 \choose 2} (P(DM_d | H_d)^2 \cdot P(DM_d| B_d)) + P(DM_d|H_d)^3
+\end{align*}
+
+\begin{lstlisting}[language=Python,basicstyle=\scriptsize,numbers=left]
+#!/usr/bin/env python
+
+def DM(state):  #true = BM
+    if(state):
+        return 0.6
+    else:
+        return 0.4
+
+
+def nextStep(now_state, prev_state):
+    if( (now_state == 1) & (prev_state == 1)):
+        return 0.7
+    elif((now_state == 0) & (prev_state == 1)):
+        return 0.3
+    elif((now_state == 1) & (prev_state == 0)):
+        return 0.15
+    else:
+        return 0.85
+
+
+x_0 = 0
+sum = 0
+
+for x_1 in range(1):
+    for x_2 in range(1):
+        for x_3 in range(1):
+            sum += DM(x_1) * DM(x_2) * DM(x_3) \
+		* nextStep(x_1, x_0) * nextStep(x_2, x_1) * nextStep(x_3, x_2)
+
+print(sum)
+\end{lstlisting}
+
+Returns 0.091288
+
+\item
+
+	\begin{align*}
+		P(S_0) &= \langle 1, 0 \rangle\\
+		P(S_1) &= \langle 0.85, 0.15 \rangle\\
+		P(S_1 | DM_1) &= \langle 0.791, 0.09 \rangle\\
+		P(S_2 | DM_1) &= \langle 0.735, 0.265 \rangle\\
+		P(S_2 | DM_1, DM_2) &= \langle 0.649, 0.351 \rangle\\
+		P(S_3 | DM_1, DM_2) &= \langle 0.687, 0.323 \rangle\\
+		P(S_3 | DM_1, DM_2, DM_3) &= \langle 0.586, 0.414 \rangle\\
+		P(S_4 | DM_1, DM_2, DM_3) &= \langle 0.622, 0.378 \rangle\\
+		P(S_4 | DM_1, DM_2, J_4) &= \langle 0.794, 0.206 \rangle
+	\end{align*}
+
+		Thus, the probability of him being in a bad mood on friday is $20.6\%$
+
+\end{enumerate}
+
+\subsection{Cain and Abel}
+\begin{enumerate}
+	\item $\quad$
+
+ \begin{tikzpicture}[
+   %node distance=1cm and 1cm,
+   mynode/.style={draw,circle,text width=5em,align=center},
+   myn/.style={draw,circle,text width=3em,align=center},
+   mysquare/.style={draw,rectangle,text width=5em,minimum height=5em,text centered},
+   mydi/.style={draw,diamond,text width=5em,align=center},
+	 node distance=2cm and 2cm,
+ ]
+	 \node[myn] (t){T};
+	 \node[myn, right=of t] (h){H};
+	 \node[myn, below=of t] (tt){TT};
+	 \node[myn, below=of tt] (tth){TTH};
+	 \node[myn, below=of tth] (tthh){TTHH};
+	 \node[myn, below=of h](hh){HH};
+	 \node[myn, below=of hh](hhh){HHH};
+	 \node[myn, below=of hhh](hhhh){HHHH};
+	 \node[myn, above right= 1.2cm and 0.6cm of t](init){INIT};
+	 %\node[myn, right=of tt]
+	 \path
+	 (h) edge[->, bend right, thick] (t)
+	 (h) edge[->, thick] (hh)
+	 (hh) edge[->, thick] (hhh)
+	 (hh) edge[->, thick] (t)
+	 (hhh) edge[->, thick] (hhhh)
+	 (hhh) edge[->, thick] (t)
+	 (t) edge[->, bend right, thick] (h)
+	 (t) edge[->, thick] (tt)
+	 (tt) edge[->, thick] (tth)
+	 (tt) edge[loop left, ->, thick] (tt)
+	 (tth) edge[->, thick] (tthh)
+	 (tth) edge[->, bend left, thick] (t)
+	 (init) edge[->, bend right](t)
+	 (init) edge[->, bend left](h);
+
+	 %\node[mynode, right=of b](m){M};
+	 %%above right=0.7cm and 4cm of A]
+	 %%\node[mysquare, above right=2cm and 0.8cm of b](buy){Buy};
+	 %\node[mynode, below=of b](p){P};
+	 %\node[mydi, below left = 0.6cm and 3cm of b](u){U};
+
+	 %\path %(buy) edge[-latex, bend right] (b)
+	 %(buy) edge[-latex, bend left] (m)
+	 %(b) edge[-latex, bend right] (u)
+	 %(b) edge[-latex] (p)
+	 %(b) edge[-latex] (m)
+	 %(m) edge[-latex, bend left] (p)
+	 %(p) edge[-latex,bend left] (u);
+ \end{tikzpicture}
+
+		\item\quad
+
+\begin{lstlisting}[language=Python,basicstyle=\scriptsize,numbers=left]
+#!/usr/bin/env python
+import numpy as np
+
+S_0 = np.array([1.0, 0, 0, 0, 0, 0, 0, 0, 0])
+
+def trans(old):
+    if(old == 0):
+        return np.array([0, 0.5, 0.5, 0, 0, 0, 0, 0, 0])
+    if(old == 1):
+        return np.array([0, 0, 0.5, 0.5, 0, 0, 0, 0, 0])
+    if(old == 2):
+        return np.array([0, 0.5, 0, 0, 0.5, 0, 0, 0, 0])
+    if(old == 3):
+        return np.array([0, 0, 0, 0.5, 0, 0.5, 0, 0, 0])
+    if(old == 4):
+        return np.array([0, 0.5, 0, 0, 0, 0, 0.5, 0, 0])
+    if(old == 5):
+        return np.array([0, 0.5, 0, 0, 0, 0, 0, 0.5, 0])
+    if(old == 6):
+        return np.array([0, 0.5, 0, 0, 0, 0, 0, 0, 0.5])
+    if(old == 7):
+        return np.array([0, 0, 0, 0, 0, 0, 0, 1.0, 0])
+    if(old == 8):
+        return np.array([0, 0, 0, 0, 0, 0, 0, 0, 1.0])
+    else:
+        print("SHOULD NEVER HAPPEN THE END IS NIGH")
+        exit()
+        return np.array(0)
+
+
+def norm(vec):
+    return vec/np.sum(vec)
+
+
+def step(old):
+    sum = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0.0])
+    for i in range(9):
+        sum += trans(i) * old[i]
+    return norm(sum)
+
+print(S_0)
+vec = S_0
+for i in range(100):
+    print(step(vec))
+    vec = step(vec)
+    print(str(i) + ": " + str(vec))
+\end{lstlisting}
+
+(States are numbered from top to bottom, left to right)
+
+This converges to 
+
+\begin{lstlisting}[language=Python,basicstyle=\scriptsize]
+[  0.00000000e+00   2.79043385e-06   1.56899963e-06   3.58446618e-06
+   8.82214006e-07   2.01546655e-06   4.96049546e-07   7.49990902e-01
+   2.49997761e-01 ]
+\end{lstlisting}
+
+Thus Cain wins with a probability of 0.25.
+\end{enumerate}
+\end{document}
