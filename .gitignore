@@ -16,3 +16,4 @@
 old/
 *.synctex.gz
 *.class
+*.pyc
