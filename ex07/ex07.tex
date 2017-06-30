@@ -1,0 +1,126 @@
+\documentclass[fleqn,12pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+\usepackage[ngerman]{babel}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{gauss}
+\usepackage{braket}
+\usepackage{hyperref}
+\usepackage{wasysym}
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,arrows,automata}
+
+\usepackage{scrpage2}
+\pagestyle{scrheadings}
+\clearscrheadfoot
+\ohead{\pagemark}
+\ihead{Magnus Berendes, 21752155}
+\ifoot{\today}
+\ofoot{\blattn}
+%\setheadtopline{1pt}
+\setheadsepline{0.4pt}
+\setfootsepline{0.4pt}
+
+\usepackage{enumitem}
+\newcommand{\id}{\, \mathrm{d}}
+\newcommand{\intl}{\int\displaylimits}
+% New definition of square root:
+% it renames \sqrt as \oldsqrt
+\let\oldsqrt\sqrt
+% it defines the new \sqrt in terms of the old one
+\def\sqrt{\mathpalette\DHLhksqrt}
+\def\DHLhksqrt#1#2{%
+	\setbox0=\hbox{$#1\oldsqrt{#2\,}$}\dimen0=\ht0
+	\advance\dimen0-0.2\ht0
+	\setbox2=\hbox{\vrule height\ht0 depth -\dimen0}%
+{\box0\lower0.4pt\box2}}
+
+\newcommand{\karos}[2]{
+	\begin{tikzpicture}
+		\draw[step=0.5cm, color=gray] (0,0) grid (#1 cm , #2 cm);
+	\end{tikzpicture}
+}
+\newcommand{\abs}[1]{
+	\left \vert #1 \right \vert
+}
+\newcommand{\absbb}[1]{
+	\left \Vert #1 \right \Vert
+}
+
+\usepackage{microtype}
+%TODO
+\newcommand{\blattn}{Exercise 7}
+\begin{document}
+\section*{\blattn}
+\setcounter{section}{7}
+\subsection{Markov Games}
+\begin{itemize}
+	\item
+		\begin{align*}
+			U_a(s) &= R(s) + \gamma \max_a(\sum_{s'} U_b(s') \cdot T(s,a,s'))\\
+			U_b(s) &= - R(s) + \gamma \max_a(\sum_{s'} U_a(s') \cdot T(s,a,s'))\\
+		\end{align*}
+	\item
+		\dots
+	\item
+
+\end{itemize}\quad
+
+
+ \begin{tikzpicture}[
+   %node distance=1cm and 1cm,
+   mynode/.style={draw,circle,text width=5em,align=center},
+   myn/.style={draw,circle,text width=3em,align=center},
+   mysquare/.style={draw,rectangle,text width=5em,minimum height=5em,text centered},
+   mydi/.style={draw,diamond,text width=5em,align=center},
+	 node distance=2cm and 2cm,
+ ]
+	 \node[myn,draw=none] (11) {};
+	 \node[myn,right=of 11] (12) {1,2};
+	 \node[myn,right=of 12] (13) {1,3};
+	 \node[myn,right=of 13,state,initial above] (14) {1,4};
+	 \node[myn,below=of 11,draw=none] (21) {};
+	 \node[myn,below=of 21,label={[label distance=0.2cm,style=draw]120:-1},state,accepting] (31) {3,1};
+	 %\node[myn,below=of 31] (41) {4,1};
+	 \node[myn,draw=none,below=of 12] (22) {};
+	 \node[myn,below=of 22] (32) {3,2};
+	 %\node[myn,below=of 32] (42) {4,2};
+	 \node[myn,below=of 13] (23) {2,3};
+	 \node[myn,below=of 23,draw=none] (33) {};
+	 \node[myn,below=of 33,label={[label distance=0.2cm,style=draw]10:+1},state,accepting] (43) {4,3};
+	 \node[myn,below=of 14] (24) {2,4};
+	 \node[myn,below=of 24] (34) {3,4};
+
+	 \path
+	 (14) edge[->, thick] (24)
+	 (24) edge[->,dashed,thick] (23)
+	 (24) edge[->,dashed,thick] (34)
+	 (23) edge[->,thick] (13)
+	 (23) edge[->,thick] (43)
+	 (13) edge[->,thick,dashed] (12)
+	 (13) edge[->,thick,dashed] (14)
+	 (12) edge[->,thick] (32)
+	 (32) edge[->,thick,dashed] (34)
+	 (32) edge[->,thick,dashed] (31)
+	 ;
+
+ \end{tikzpicture}
+
+ \subsection{Long term vs short term}
+ \begin{align*}
+	 U_{down}(\gamma) &= -50 + \sum_{i=1}^{100} \gamma^i\\
+	 U_{up}(\gamma) &= 50 - \sum_{i=1}^{100} \gamma^i\\
+-50 + \sum_{i=1}^{100} \gamma^i&= 50 - \sum_{i=1}^{100} \gamma^i\\
+-100 + \sum_{i=1}^{100} \gamma^i&= - \sum_{i=1}^{100} \gamma^i\\
+	 50 &= \gamma \sum_{i=0}^{99} \gamma^{i}\\
+	 50 &= \frac{\gamma^{100}-1}{\gamma -1}\\
+	 \gamma &= 0.983977\\
+ \end{align*}
+ 
+ For $\gamma < 0.983977$ the agent will go $Up$, for $\gamma > 0.983977$, the agent will go $Down$.
+
+
+\end{document}
